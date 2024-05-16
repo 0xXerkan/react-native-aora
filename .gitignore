@@ -36,3 +36,4 @@ yarn-error.*
 
 # Other
 info.txt
+%ProgramData%/
