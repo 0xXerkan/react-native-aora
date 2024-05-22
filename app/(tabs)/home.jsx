@@ -6,13 +6,16 @@ import { images } from '../../constants'
 import SearchInput from '../../components/SearchInput'
 import Trending from '../../components/Trending'
 import EmptyState from '../../components/EmptyState'
-import { getAllPosts } from '../../lib/appwrite'
+import { getAllPosts, getLatestPosts } from '../../lib/appwrite'
 import useAppwrite from '../../lib/useAppwrite'
 import VideoCard from '../../components/VideoCard'
 
-const Home = () => {
+import { useGlobalContext } from '../../context/GlobalProvider'
 
+const Home = () => {
+  const { user, setUser, setIsLoggedIn } = useGlobalContext();
   const { data: posts, refetch } = useAppwrite(getAllPosts);
+  const { data: latestPosts } = useAppwrite(getLatestPosts);
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -22,7 +25,7 @@ const Home = () => {
     setRefreshing(false);
   }
 
-  // console.log(posts[0]);
+  // console.log(latestPosts[0]);
 
   return (
     <SafeAreaView className='bg-primary min-h-full'>
@@ -37,10 +40,10 @@ const Home = () => {
             <View className='justify-between items-start flex-row mb-6'>
               <View>
                 <Text className='font-pmedium text-sm text-gray-100'>
-                  Welcome Back
+                  Welcome Back,
                 </Text>
                 <Text className='text-2xl font-psemibold text-white'>
-                  rlandrydev
+                  {user?.username}
                 </Text>
               </View>
 
@@ -57,7 +60,8 @@ const Home = () => {
 
             <View className='w-full flex-1 pt-5 pb-8'>
               <Text className='text-gray-100 text-lg font-pregular mb-3'>Trending Videos</Text>
-              <Trending posts={[ { id: 1 }, { id: 2 }, { id: 3 }] ?? [] }/>
+
+              <Trending posts={latestPosts ?? [] }/>
             </View>
           </View>
         )}

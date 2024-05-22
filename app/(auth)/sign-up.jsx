@@ -7,6 +7,7 @@ import { images } from '../../constants';
 import FormField from '../../components/FormField';
 import CustomButton from '../../components/CustomButton';
 import { createUser } from '../../lib/appwrite';
+import { useGlobalContext } from '../../context/GlobalProvider';
 
 const SignUp = () => {
   const [form, setForm] = useState({
@@ -15,6 +16,7 @@ const SignUp = () => {
     password: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { setUser, setIsLoggedIn } = useGlobalContext();
 
   const submit = async () => {
     if(!form.username || !form.email || !form.password) {
@@ -25,8 +27,10 @@ const SignUp = () => {
 
     try {
       const result = await createUser(form.email, form.password, form.username);
-
       //set result to global state using context
+      setUser(result);
+      setIsLoggedIn(true);
+
       //for now, route to home
       router.replace('/home');
       
